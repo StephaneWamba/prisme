@@ -22,7 +22,7 @@ const METRIC_LABELS: Record<string, string> = {
 };
 
 export default async function AnomaliesPage() {
-  let anomalies = [];
+  let anomalies: import("../../lib/api").Anomaly[] = [];
   try {
     anomalies = await getAnomalies();
   } catch {

@@ -9,7 +9,7 @@ function scoreColor(s: number) {
 }
 
 export default async function CategoriesPage() {
-  let categories = [];
+  let categories: import("../../lib/api").Category[] = [];
   try {
     categories = await getCategories();
   } catch {
