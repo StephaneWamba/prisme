@@ -4,9 +4,9 @@ import logging
 import uuid
 from datetime import datetime, timezone
 
-import os  # noqa: F401 used via os.environ
+import os
 
-import google.generativeai as genai  # noqa: F401 used in generate()
+from google import genai
 
 import bq_client
 
@@ -89,14 +89,13 @@ Reponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de texte auto
 
 def generate(run_id: str, run_date: str) -> dict:
     api_key = os.environ.get("GEMINI_API_KEY", "")
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.0-flash-lite")
+    client = genai.Client(api_key=api_key)
 
     ctx = _fetch_context()
     prompt = _build_prompt(ctx)
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
         raw = response.text.strip()
         if raw.startswith("```"):
             raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()

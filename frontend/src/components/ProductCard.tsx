@@ -2,6 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Product } from "../lib/api";
 
+function decodeHtml(str: string): string {
+  return str
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#039;/g, "'");
+}
+
 function scoreClass(s: number) {
   if (s >= 75) return "score-high";
   if (s >= 50) return "score-mid";
@@ -98,7 +107,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               WebkitBoxOrient: "vertical",
             }}
           >
-            {product.product_name ?? product.ean}
+            {decodeHtml(product.product_name ?? product.ean)}
           </p>
           <p style={{ fontSize: 11, color: "var(--text-faint)", lineHeight: 1 }}>{cat}</p>
         </div>

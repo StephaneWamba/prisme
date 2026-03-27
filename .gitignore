@@ -1,14 +1,57 @@
-*.md
-docs/
-.env
-.env.local
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.egg-info/
 .venv/
 venv/
+*.log
+
+# Node / Next.js
 node_modules/
 .next/
-*.egg-info/
 dist/
+.vercel/
+
+# Secrets
+.env
+.env.local
+.env.*.local
+*-sa-key.json
+*.key.json
+service_account*.json
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Build / Cloud
+cloudbuild*.yaml
+infra/setup.sh
+infra/iam.sh
+
+# Data / cache
+*.parquet
+*.arrow
+*.pkl
+*.h5
+
+# Screenshots / test artifacts
+*.png
+*.jpg
+*.jpeg
+test-*.png
+.playwright-mcp/
+
+# Claude / AI tool dirs
+.claude/
+
+# Docs / internal notes
+lessons-learned.md
+prisme.md

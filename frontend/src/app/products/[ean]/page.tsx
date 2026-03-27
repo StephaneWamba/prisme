@@ -5,6 +5,15 @@ import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
+function decodeHtml(str: string): string {
+  return str
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#039;/g, "'");
+}
+
 function scoreColor(s: number) {
   if (s >= 75) return "#10b981";
   if (s >= 50) return "#f59e0b";
@@ -99,7 +108,7 @@ export default async function ProductPage({ params }: { params: { ean: string } 
           <div>
             <p style={{ fontSize: 12, color: "var(--text-faint)", marginBottom: 4 }}>{cat}</p>
             <h1 style={{ fontSize: "clamp(20px, 3vw, 28px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-              {product.product_name ?? product.ean}
+              {decodeHtml(product.product_name ?? product.ean)}
             </h1>
             <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 6 }}>EAN: {product.ean}</p>
           </div>
