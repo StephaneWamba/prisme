@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "../components/Nav";
+import WelcomeModal from "../components/WelcomeModal";
 
 export const metadata: Metadata = {
   title: "Prisme - Audit qualite catalogue",
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Nav />
+        <WelcomeModal />
         <main style={{ minHeight: "calc(100vh - 60px)", position: "relative", zIndex: 1 }}>
           {children}
         </main>
