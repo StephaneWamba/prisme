@@ -60,7 +60,7 @@ def get_catalog_health() -> dict:
             WHERE run_date = (SELECT MAX(run_date) FROM {table('product_scores')})
         """)
         return rows[0] if rows else {}
-    return query_cached("catalog_health", _fetch)
+    return _cached("catalog_health", _fetch)
 
 
 def get_score_evolution() -> list[dict]:
@@ -76,7 +76,7 @@ def get_score_evolution() -> list[dict]:
             GROUP BY date
             ORDER BY date
         """)
-    return query_cached("score_evolution", _fetch)
+    return _cached("score_evolution", _fetch)
 
 
 def get_categories(limit: int = 50) -> list[dict]:
@@ -96,7 +96,7 @@ def get_categories(limit: int = 50) -> list[dict]:
             ORDER BY avg_catalog_score ASC
             LIMIT {limit}
         """)
-    return query_cached(f"categories_{limit}", _fetch)
+    return _cached(f"categories_{limit}", _fetch)
 
 
 # --- Products ---
@@ -197,7 +197,7 @@ def get_quality_coverage() -> dict:
             WHERE run_date = (SELECT max_run FROM latest)
         """)
         return rows[0] if rows else {}
-    return query_cached("quality_coverage", _fetch)
+    return _cached("quality_coverage", _fetch)
 
 
 def get_field_completeness() -> list[dict]:
@@ -209,4 +209,4 @@ def get_field_completeness() -> list[dict]:
               AND metric_name LIKE 'completeness_%'
             ORDER BY metric_value ASC
         """)
-    return query_cached("field_completeness", _fetch)
+    return _cached("field_completeness", _fetch)

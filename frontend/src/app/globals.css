@@ -85,6 +85,13 @@ body::before {
   padding: 24px;
 }
 
+.card-hover {
+  transition: border-color 150ms ease;
+}
+.card-hover:hover {
+  border-color: var(--border-strong);
+}
+
 /* Search input line */
 .search-wrap { position: relative; }
 .search-line {

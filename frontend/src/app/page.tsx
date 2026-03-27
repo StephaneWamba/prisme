@@ -58,12 +58,7 @@ export default async function HomePage() {
           { href: "/reports", label: "Rapport Gemini", desc: "Analyse IA quotidienne" },
         ].map((item) => (
           <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
-            <div
-              className="card"
-              style={{ cursor: "pointer", transition: "border-color 150ms ease" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-strong)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = "var(--border)")}
-            >
+            <div className="card card-hover" style={{ cursor: "pointer" }}>
               <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>{item.label}</p>
               <p style={{ fontSize: 12, color: "var(--text-muted)" }}>{item.desc}</p>
             </div>

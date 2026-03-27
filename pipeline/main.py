@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 def fetch_products() -> list[dict]:
     return bq_client.run_query(
-        "SELECT * FROM `prisme-wamba-2026.prisme_dataset.products_selected` LIMIT 15000"
+        "SELECT * FROM `prisme-wamba-2026.prisme_dataset.products_selected` LIMIT 500"
     )
 
 

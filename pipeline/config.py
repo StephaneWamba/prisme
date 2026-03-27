@@ -13,7 +13,7 @@ VISION_API_KEY = os.environ.get("VISION_API_KEY", "")
 
 # Vertex AI
 VERTEX_MODEL = "gemini-1.5-flash"
-VERTEX_LOCATION = "europe-west1"
+VERTEX_LOCATION = "us-central1"
 
 # CLIP
 CLIP_MODEL = "openai/clip-vit-base-patch32"
