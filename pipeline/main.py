@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 import bq_client
+import ingest_off
 import anomaly_detector
 import downloader
 import encoder
@@ -81,6 +82,7 @@ def run_pipeline() -> None:
     run_date = datetime.now(timezone.utc).isoformat()
     logger.info(f"Pipeline start: run_id={run_id}")
 
+    ingest_off.run()  # no-op if products already loaded
     products = fetch_products()
     logger.info(f"Loaded {len(products)} products")
 
