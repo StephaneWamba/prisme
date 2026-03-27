@@ -1,0 +1,9 @@
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+google-cloud-bigquery==3.20.1
+google-cloud-aiplatform==1.49.0
+torch==2.2.2
+transformers==4.40.1
+Pillow==10.3.0
+requests==2.31.0
+pydantic==2.7.1

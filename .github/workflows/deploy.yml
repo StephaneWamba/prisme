@@ -1,0 +1,124 @@
+name: Deploy Prisme
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_ID: prisme-wamba-2026
+  REGION: europe-west1
+  REGISTRY: europe-west1-docker.pkg.dev/prisme-wamba-2026/prisme-docker
+
+jobs:
+  deploy-api:
+    name: Deploy API
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push API image
+        run: |
+          docker build -f docker/Dockerfile.api -t ${{ env.REGISTRY }}/api:${{ github.sha }} .
+          docker push ${{ env.REGISTRY }}/api:${{ github.sha }}
+
+      - name: Deploy API to Cloud Run
+        run: |
+          gcloud run deploy prisme-api \
+            --image=${{ env.REGISTRY }}/api:${{ github.sha }} \
+            --region=${{ env.REGION }} \
+            --platform=managed \
+            --service-account=${{ secrets.CLOUD_RUN_SA }} \
+            --set-secrets=VISION_API_KEY=vision-api-key:latest \
+            --min-instances=1 \
+            --max-instances=3 \
+            --memory=2Gi \
+            --cpu=1 \
+            --allow-unauthenticated \
+            --port=8080
+
+      - name: Output API URL
+        run: |
+          URL=$(gcloud run services describe prisme-api --region=${{ env.REGION }} --format='value(status.url)')
+          echo "API_URL=$URL" >> $GITHUB_OUTPUT
+        id: api_url
+
+  deploy-pipeline:
+    name: Deploy Pipeline Job
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and push pipeline image
+        run: |
+          docker build -f docker/Dockerfile.pipeline -t ${{ env.REGISTRY }}/pipeline:${{ github.sha }} .
+          docker push ${{ env.REGISTRY }}/pipeline:${{ github.sha }}
+
+      - name: Update Cloud Run Job
+        run: |
+          gcloud run jobs update prisme-pipeline \
+            --image=${{ env.REGISTRY }}/pipeline:${{ github.sha }} \
+            --region=${{ env.REGION }} \
+            --service-account=${{ secrets.CLOUD_RUN_SA }} \
+            --set-secrets=VISION_API_KEY=vision-api-key:latest \
+            --memory=4Gi \
+            --cpu=2 \
+            --max-retries=1 \
+            --task-timeout=3600 || \
+          gcloud run jobs create prisme-pipeline \
+            --image=${{ env.REGISTRY }}/pipeline:${{ github.sha }} \
+            --region=${{ env.REGION }} \
+            --service-account=${{ secrets.CLOUD_RUN_SA }} \
+            --set-secrets=VISION_API_KEY=vision-api-key:latest \
+            --memory=4Gi \
+            --cpu=2 \
+            --max-retries=1 \
+            --task-timeout=3600
+
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    needs: [deploy-api]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel
+        run: |
+          cd frontend
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }} \
+            --env NEXT_PUBLIC_API_URL=${{ secrets.API_URL }}

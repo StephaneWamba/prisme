@@ -1,0 +1,14 @@
+*.md
+docs/
+.env
+.env.local
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+node_modules/
+.next/
+*.egg-info/
+dist/
+.DS_Store

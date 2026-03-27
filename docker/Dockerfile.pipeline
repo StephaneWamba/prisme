@@ -1,0 +1,25 @@
+# Multi-stage build for Prisme pipeline (Cloud Run Job)
+FROM python:3.11-slim AS builder
+
+# Install system deps for OpenCV
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY pipeline/requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+COPY pipeline/ .
+
+ENV PATH=/root/.local/bin:$PATH
+
+CMD ["python", "main.py"]
