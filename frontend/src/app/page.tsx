@@ -1,15 +1,7 @@
 import { getCatalogHealth } from "../lib/api";
 import ScoreGauge from "../components/ScoreGauge";
+import ScoreEvolutionChart from "../components/ScoreEvolutionChart";
 import Link from "next/link";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
 
 export const revalidate = 120;
 
@@ -55,43 +47,7 @@ export default async function HomePage() {
         <ScoreGauge score={health.visual_score} label="Assets visuels" color="var(--score-visual)" size={120} />
       </div>
 
-      {/* Evolution chart */}
-      {evolution.length > 0 && (
-        <div className="card" style={{ marginBottom: 24 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 20, color: "var(--text-muted)" }}>
-            EVOLUTION 30 JOURS
-          </h2>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={evolution}>
-              <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" />
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 11, fill: "var(--text-faint)" }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                domain={[0, 100]}
-                tick={{ fontSize: 11, fill: "var(--text-faint)" }}
-                tickLine={false}
-                axisLine={false}
-                width={28}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: "var(--bg)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 8,
-                  fontSize: 12,
-                }}
-              />
-              <Line dataKey="catalog_score" stroke="#10b981" strokeWidth={2} dot={false} name="Catalogue" />
-              <Line dataKey="text_score" stroke="var(--score-text)" strokeWidth={1.5} dot={false} name="Texte" />
-              <Line dataKey="visual_score" stroke="var(--score-visual)" strokeWidth={1.5} dot={false} name="Visuel" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+      <ScoreEvolutionChart data={evolution} />
 
       {/* Quick links */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
