@@ -1,6 +1,6 @@
 import { getCategories } from "../../lib/api";
 
-export const revalidate = 120;
+export const revalidate = 0;
 
 function scoreColor(s: number) {
   if (s >= 75) return "#10b981";

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 function scoreColor(s: number) {
   if (s >= 75) return "#10b981";

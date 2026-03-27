@@ -3,7 +3,7 @@ import ScoreGauge from "../components/ScoreGauge";
 import ScoreEvolutionChart from "../components/ScoreEvolutionChart";
 import Link from "next/link";
 
-export const revalidate = 120;
+export const revalidate = 0;
 
 export default async function HomePage() {
   let health = { catalog_score: 0, text_score: 0, visual_score: 0, product_count: 0 };

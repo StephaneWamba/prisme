@@ -1,7 +1,7 @@
 import { getAnomalies } from "../../lib/api";
 import AnomalyBadge from "../../components/AnomalyBadge";
 
-export const revalidate = 120;
+export const revalidate = 0;
 
 const TYPE_LABELS: Record<string, string> = {
   COMPLETENESS_DROP: "Chute de completude",

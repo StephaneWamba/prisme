@@ -1,7 +1,7 @@
 import { getLatestReport } from "../../lib/api";
 import ScoreGauge from "../../components/ScoreGauge";
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 export default async function ReportsPage() {
   let report = null;

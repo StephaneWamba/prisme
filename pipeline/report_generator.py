@@ -4,11 +4,11 @@ import logging
 import uuid
 from datetime import datetime, timezone
 
-import vertexai
-from vertexai.generative_models import GenerativeModel
+import os  # noqa: F401 used via os.environ
+
+import google.generativeai as genai  # noqa: F401 used in generate()
 
 import bq_client
-from config import PROJECT_ID, VERTEX_LOCATION, VERTEX_MODEL
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +88,9 @@ Reponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de texte auto
 
 
 def generate(run_id: str, run_date: str) -> dict:
-    vertexai.init(project=PROJECT_ID, location=VERTEX_LOCATION)
-    model = GenerativeModel(VERTEX_MODEL)
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-2.0-flash-lite")
 
     ctx = _fetch_context()
     prompt = _build_prompt(ctx)
@@ -97,6 +98,8 @@ def generate(run_id: str, run_date: str) -> dict:
     try:
         response = model.generate_content(prompt)
         raw = response.text.strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
         parsed = json.loads(raw)
     except Exception as e:
         logger.error(f"Gemini generation failed: {e}")
