@@ -6,6 +6,7 @@ import WelcomeModal from "../components/WelcomeModal";
 export const metadata: Metadata = {
   title: "Prisme - Audit qualite catalogue",
   description: "Plateforme d'audit qualite catalogue retail & FMCG",
+  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

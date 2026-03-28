@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Prism triangle -->
+  <polygon points="16,3 30,27 2,27" fill="#111827"/>
+  <!-- Refracted light band -->
+  <polygon points="16,3 22,27 16,27" fill="#10b981" opacity="0.85"/>
+</svg>
